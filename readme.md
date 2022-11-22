@@ -26,6 +26,8 @@ Now that the files are created, we can make a manifest file:
     MP4Box -dash 2000 -rap -frag-rap  -bs-switching no -profile "dashavc264:live" "output_5000.mp4" "output_3000.mp4"  "output_audio.m4a" -out "output/output.mpd"
 ```
 
+## Run index file via live server
+
 
 ## Essential Packages to convert into mpd
 

@@ -1,4 +1,5 @@
-const happyBunnyVideoUrl = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+const happyBunnyVideoUrl =
+  "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
 
 function initApp() {
   // Install built-in polyfills to patch browser incompatibilities.
@@ -10,19 +11,19 @@ function initApp() {
     initPlayer();
   } else {
     // This browser does not have the minimum set of APIs we need.
-    console.error('Browser not supported!');
+    console.error("Browser not supported!");
   }
 
   // Update the online status and add listeners so that we can visualize
   // our network state to the user.
   updateOnlineStatus();
-  window.addEventListener('online',  updateOnlineStatus);
-  window.addEventListener('offline', updateOnlineStatus);
+  window.addEventListener("online", updateOnlineStatus);
+  window.addEventListener("offline", updateOnlineStatus);
 }
 
 function initPlayer() {
   // Create a Player instance.
-  const video = document.getElementById('video');
+  const video = document.getElementById("video");
   const player = new shaka.Player(video);
 
   // Attach player and storage to the window to make it easy to access
@@ -30,12 +31,14 @@ function initPlayer() {
   window.player = player;
 
   // Listen for error events.
-  player.addEventListener('error', onErrorEvent);
+  player.addEventListener("error", onErrorEvent);
 
   initStorage(player);
 
-  const downloadButton = document.getElementById('download-button');
+  const downloadButton = document.getElementById("download-button");
+  const onlinePlayButton = document.getElementById("online-play-button");
   downloadButton.onclick = onDownloadClick;
+  onlinePlayButton.onclick = onOnlinePlayClick;
 
   // Update the content list to show what items we initially have
   // stored offline.
@@ -49,7 +52,7 @@ function onErrorEvent(event) {
 
 function onError(error) {
   // Log the error.
-  console.error('Error code', error.code, 'object', error);
+  console.error("Error code", error.code, "object", error);
 }
 
 function selectTracks(tracks) {
@@ -59,11 +62,15 @@ function selectTracks(tracks) {
   // practice for storing content offline.  Decide what your app needs, or keep
   // the default (user-pref-matching audio, best SD video, all text).
   const found = tracks
-      .filter(function(track) { return track.type == 'variant'; })
-      .sort(function(a, b) { return a.bandwidth - b.bandwidth; })
-      .pop();
-  console.log('Offline Track bandwidth: ' + found.bandwidth);
-  return [ found ];
+    .filter(function (track) {
+      return track.type == "variant";
+    })
+    .sort(function (a, b) {
+      return a.bandwidth - b.bandwidth;
+    })
+    .pop();
+  console.log("Offline Track bandwidth: " + found.bandwidth);
+  return [found];
 }
 
 function initStorage(player) {
@@ -74,8 +81,8 @@ function initStorage(player) {
   window.storage.configure({
     offline: {
       progressCallback: setDownloadProgress,
-      trackSelectionCallback: selectTracks
-    }
+      trackSelectionCallback: selectTracks,
+    },
   });
 }
 
@@ -96,9 +103,10 @@ function downloadContent(manifestUri, title) {
   // This can hold any information the app wants to be stored with the
   // content.
   const metadata = {
-    'title': title,
-    'downloaded': Date()
+    title: title,
+    downloaded: Date(),
   };
+  // const expiration = 20000;
 
   return window.storage.store(manifestUri, metadata);
 }
@@ -110,10 +118,10 @@ function downloadContent(manifestUri, title) {
  * complete.
  */
 function onDownloadClick() {
-  const downloadButton = document.getElementById('download-button');
-  const manifestUri = document.getElementById('asset-uri-input').value;
-  const title = document.getElementById('asset-title-input').value;
-
+  const downloadButton = document.getElementById("download-button");
+  const manifestUri = document.getElementById("asset-uri-input").value;
+  const title = document.getElementById("asset-title-input").value;
+  // const expiration=
   // Disable the download button to prevent user from requesting
   // another download until this download is complete.
   downloadButton.disabled = true;
@@ -123,14 +131,14 @@ function onDownloadClick() {
   // Download the content and then re-enable the download button so
   // that more content can be downloaded.
   downloadContent(manifestUri, title)
-    .then(function() {
+    .then(function () {
       return refreshContentList();
     })
-    .then(function(content) {
+    .then(function (content) {
       setDownloadProgress(null, 1);
       downloadButton.disabled = false;
     })
-    .catch(function(error) {
+    .catch(function (error) {
       // In the case of an error, re-enable the download button so
       // that the user can try to download another item.
       downloadButton.disabled = false;
@@ -138,18 +146,23 @@ function onDownloadClick() {
     });
 }
 
+function onOnlinePlayClick() {
+  const manifestUri = document.getElementById("asset-uri-input").value;
+  window.player.load(manifestUri);
+}
+
 /*
  * Update the online status box at the top of the page to tell the
  * user whether or not they have an internet connection.
  */
 function updateOnlineStatus() {
-  const signal = document.getElementById('online-signal');
+  const signal = document.getElementById("online-signal");
   if (navigator.onLine) {
-    signal.innerHTML = 'ONLINE';
-    signal.style.background = 'green';
+    signal.innerHTML = "ONLINE";
+    signal.style.background = "green";
   } else {
-    signal.innerHTML = 'OFFLINE';
-    signal.style.background = 'grey';
+    signal.innerHTML = "OFFLINE";
+    signal.style.background = "grey";
   }
 }
 
@@ -158,7 +171,7 @@ function updateOnlineStatus() {
  * have made.
  */
 function setDownloadProgress(content, progress) {
-  const progressBar = document.getElementById('progress-bar');
+  const progressBar = document.getElementById("progress-bar");
   progressBar.value = progress * progressBar.max;
 }
 
@@ -167,51 +180,55 @@ function setDownloadProgress(content, progress) {
  * list of downloaded content.
  */
 function refreshContentList() {
-  const contentTable = document.getElementById('content-table');
+  const contentTable = document.getElementById("content-table");
 
   // Clear old rows from the table.
   while (contentTable.rows.length) {
     contentTable.deleteRow(0);
   }
 
-  const addRow = function(content) {
+  const addRow = function (content) {
     const append = -1;
 
     const row = contentTable.insertRow(append);
     row.insertCell(append).innerHTML = content.offlineUri;
     Object.keys(content.appMetadata)
-        .map(function(key) {
-          return content.appMetadata[key];
-        })
-        .forEach(function(value) {
-          row.insertCell(append).innerHTML = value;
+      .map(function (key) {
+        return content.appMetadata[key];
+      })
+      .forEach(function (value) {
+        row.insertCell(append).innerHTML = value;
+      });
+
+    row.insertCell(append).appendChild(
+      createButton("PLAY", function () {
+        playContent(content);
+      })
+    );
+
+    row.insertCell(append).appendChild(
+      createButton("REMOVE", function () {
+        removeContent(content).then(function () {
+          refreshContentList();
         });
-
-    row.insertCell(append).appendChild(createButton(
-        'PLAY',
-        function() { playContent(content); }));
-
-    row.insertCell(append).appendChild(createButton(
-        'REMOVE',
-        function() {
-          removeContent(content)
-              .then(function() { refreshContentList() });
-        }));
+      })
+    );
   };
 
-  return listContent()
-      .then(function(content) { content.forEach(addRow); });
-};
+  return listContent().then(function (content) {
+    content.forEach(addRow);
+  });
+}
 
 /*
  * Create a new button but do not add it to the DOM. The caller
  * will need to do that.
  */
 function createButton(text, action) {
-  const button = document.createElement('button');
+  const button = document.createElement("button");
   button.innerHTML = text;
   button.onclick = action;
   return button;
 }
 
-document.addEventListener('DOMContentLoaded', initApp);
+document.addEventListener("DOMContentLoaded", initApp);

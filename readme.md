@@ -34,3 +34,13 @@ Now that the files are created, we can make a manifest file:
 - [gpac](https://gpac.wp.imt.fr/downloads/)
 - [ffmpeg](https://ffmpeg.org/download.html)
 
+<!-- Convert -->
+```ffmpeg -y -i "input/super_forum_12_hindi_720p.mp4" -c:a aac -b:a 192k -vn "output_super_forum_12_hindi_720p_audio.m4a" -preset slow -tune film -vsync passthrough -an -c:v libx264 -x264opts 'keyint=25:min-keyint=25:no-scenecut' -crf 22  -maxrate 5000k -bufsize 10000k -pix_fmt yuv420p -f mp4 "output_super_forum_12_hindi_720p_5000.mp4" && MP4Box -dash 2000 -rap -frag-rap  -bs-switching no -profile "dashavc264:live" "output_super_forum_12_hindi_720p_5000.mp4" "output_super_forum_12_hindi_720p_audio.m4a" -out "output/output_super_forum_12_hindi_720p/output_super_forum_12_hindi_720p.mpd" && rm "output_super_forum_12_hindi_720p_audio.m4a" && rm "output_super_forum_12_hindi_720p_5000.mp4"```
+
+<!-- aws upload -->
+
+```aws s3 cp "/Users/metadesign/Desktop/projects/learning/shaka-player-offline-download-js/output/output_super_forum_12_hindi_720p" "s3://syportalclpepisodebucket/output_super_forum_12_hindi_720p" --acl public-read --recursive```
+
+<!-- Link will be -->
+
+```https://syportalclpepisodebucket.s3.ap-south-1.amazonaws.com/output_super_forum_12_hindi_720p/output_super_forum_12_hindi_720p.mpd```

@@ -3,7 +3,7 @@
 #EXTINF:-1 tvg-logo="" group-title="IPTV-1", Skynet
 http://stream.imotv.net/stream/mF5Ltxf3TfoBlu6YMov-wA/1702163858/redbulltv/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-logo="https://i.postimg.cc/hGR81WXv/GTV.png" group-title="IPTV-1", GTV
-http://stream.imotv.net/stream/SCMgDpz3qL2jx5vEXF2edA/1702163899/gazi-tv/tracks-v1a1/mono.m3u8
+http://tv.dugdugilive.com:8080/0ne$ky23/GaziTV/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-logo="https://i.postimg.cc/Z56Q3ppt/Sony-Sports-Ten-1.png" group-title="IPTV-1", Sony Sports Ten 1
 http://stream2.imotv.net/stream/5RxHFN3T0Ms3gwGW35xoXQ/1702163915/hls/sonyten1.m3u8
 #EXTINF:-1 tvg-logo="https://i.postimg.cc/wxP4G0kY/Sony-Sports-Ten-2.png" group-title="IPTV-1", Sony Sports Ten 2

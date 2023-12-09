@@ -26,6 +26,12 @@ function initPlayer() {
   const video = document.getElementById("video");
   const player = new shaka.Player(video);
 
+const ui = video['ui'];
+const config = {
+  addSeekBar: false
+};
+ui.configure(config);
+
   // Attach player and storage to the window to make it easy to access
   // in the JS console and so we can access it in other methods.
   window.player = player;
